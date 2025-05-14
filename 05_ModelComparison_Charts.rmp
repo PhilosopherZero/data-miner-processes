@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="11.0.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="11.0.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="11.0.001" expanded="true" height="68" name="Retrieve LR_Performance" width="90" x="45" y="34">
+        <parameter key="repository_entry" value="LR_Performance"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="11.0.001" expanded="true" height="82" name="Performance to Data" width="90" x="112" y="187"/>
+      <operator activated="true" class="blending:generate_columns" compatibility="11.0.001" expanded="true" height="82" name="Generate Attributes (3)" width="90" x="112" y="340">
+        <list key="function_descriptions">
+          <parameter key="model_name" value="&quot;Logistic Regression&quot;"/>
+        </list>
+        <parameter key="keep_all_columns" value="true"/>
+        <parameter key="default_time_zone" value="America/Los_Angeles"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="11.0.001" expanded="true" height="68" name="Retrieve DT_Performance" width="90" x="179" y="34">
+        <parameter key="repository_entry" value="DT_Performance"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="11.0.001" expanded="true" height="82" name="Performance to Data (2)" width="90" x="246" y="187"/>
+      <operator activated="true" class="blending:generate_columns" compatibility="11.0.001" expanded="true" height="82" name="Generate Attributes (2)" width="90" x="246" y="340">
+        <list key="function_descriptions">
+          <parameter key="model_name" value="&quot;Decision Tree&quot;"/>
+        </list>
+        <parameter key="keep_all_columns" value="true"/>
+        <parameter key="default_time_zone" value="America/Los_Angeles"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="11.0.001" expanded="true" height="68" name="Retrieve NB_Performance" width="90" x="313" y="34">
+        <parameter key="repository_entry" value="NB_Performance"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="11.0.001" expanded="true" height="82" name="Performance to Data (3)" width="90" x="380" y="187"/>
+      <operator activated="true" class="blending:generate_columns" compatibility="11.0.001" expanded="true" height="82" name="Generate Attributes" width="90" x="447" y="340">
+        <list key="function_descriptions">
+          <parameter key="model_name" value="&quot;Naive Bayes&quot;"/>
+        </list>
+        <parameter key="keep_all_columns" value="true"/>
+        <parameter key="default_time_zone" value="America/Los_Angeles"/>
+      </operator>
+      <operator activated="true" class="append" compatibility="11.0.001" expanded="true" height="124" name="Append Performances" width="90" x="744" y="34">
+        <parameter key="data_management" value="auto"/>
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <connect from_op="Retrieve LR_Performance" from_port="output" to_op="Performance to Data" to_port="performance vector"/>
+      <connect from_op="Performance to Data" from_port="example set" to_op="Generate Attributes (3)" to_port="table input"/>
+      <connect from_op="Generate Attributes (3)" from_port="table output" to_op="Append Performances" to_port="example set 3"/>
+      <connect from_op="Retrieve DT_Performance" from_port="output" to_op="Performance to Data (2)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (2)" from_port="example set" to_op="Generate Attributes (2)" to_port="table input"/>
+      <connect from_op="Generate Attributes (2)" from_port="table output" to_op="Append Performances" to_port="example set 2"/>
+      <connect from_op="Retrieve NB_Performance" from_port="output" to_op="Performance to Data (3)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (3)" from_port="example set" to_op="Generate Attributes" to_port="table input"/>
+      <connect from_op="Generate Attributes" from_port="table output" to_op="Append Performances" to_port="example set 1"/>
+      <connect from_op="Append Performances" from_port="merged set" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>
